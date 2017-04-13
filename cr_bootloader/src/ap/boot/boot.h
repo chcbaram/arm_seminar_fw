@@ -1,12 +1,12 @@
 /*
- *  ap.h
+ *  boot.h
  *
  *  Created on: 2016. 5. 14.
  *      Author: Baram
  */
 
-#ifndef AP_H
-#define AP_H
+#ifndef BOOT_H
+#define BOOT_H
 
 
 #ifdef __cplusplus
@@ -21,12 +21,13 @@
 
 
 
-#include "cmd/cmd.h"
-#include "boot/boot.h"
+#define BOOT_ERR_INVAILD_CMD        0x00
 
 
-void apInit(void);
-void apMain(void);
+
+
+void bootInit(void);
+void bootProcessCmd(cmd_t *p_cmd);
 
 
 #ifdef __cplusplus

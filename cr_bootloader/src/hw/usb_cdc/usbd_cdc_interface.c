@@ -210,7 +210,7 @@ static int8_t CDC_Itf_Control (uint8_t cmd, uint8_t* pbuf, uint16_t length)
     {
       CDC_Reset_Status = 1;
     }
-    is_opened = req->wValue&0x01;
+    is_opened = TRUE;
     is_reopen = TRUE;
     break;
 

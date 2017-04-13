@@ -104,7 +104,7 @@ uint32_t uartOpen(uint8_t channel, uint32_t baud)
 
     case _DEF_UART2:
 
-      p_drv_uart->baud              = baud;
+      p_drv_uart->baud           = baud;
       p_drv_uart->hw.h_uart_inst = USART2;
       p_drv_uart->hw.dma_enable  = true;
       p_drv_uart->hw.vcp_enable  = false;
@@ -300,7 +300,6 @@ int32_t uartPrintf(uint8_t channel, const char *fmt, ...)
 
 
   if (uartIsEnable(channel) == false ) return 0;
-
 
   len = vsnprintf(print_buffer, 255, fmt, arg);
   va_end (arg);
