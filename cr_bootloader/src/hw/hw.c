@@ -19,6 +19,7 @@ void hwInit(void)
   ledInit();
   microsInit();
   vcpInit();
+  uartInit();
 }
 
 

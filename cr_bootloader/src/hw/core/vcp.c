@@ -104,3 +104,4 @@ int32_t vcpPrintf( const char *fmt, ...)
 
   return ret;
 }
+

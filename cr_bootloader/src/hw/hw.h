@@ -25,6 +25,7 @@
 #include "core/millis.h"
 #include "core/delay.h"
 #include "core/led.h"
+#include "core/uart.h"
 
 
 void hwInit(void);

@@ -29,6 +29,7 @@ uint8_t  vcpGetch(void);
 uint8_t  vcpRead(void);
 int32_t  vcpWrite(uint8_t *p_data, uint32_t length);
 
+
 int32_t  vcpPrintf( const char *fmt, ...);
 
 

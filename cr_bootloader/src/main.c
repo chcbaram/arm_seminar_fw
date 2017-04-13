@@ -21,6 +21,9 @@ int main(void)
   mainInit();
 
 
+  uartOpen(_DEF_UART2, 115200);
+
+
   t_time    = millis();
   t_time_us = micros();
   while(1)
@@ -33,12 +36,20 @@ int main(void)
       t_time_us = micros();
 
       ledToggle(cnt%4);
+
+      uartPrintf(_DEF_UART2, "uart2 tt\r\n");
     }
 
     if (vcpAvailable())
     {
       vcpPrintf("Received : %c\r\n", vcpRead());
     }
+
+    if (uartAvailable(_DEF_UART2))
+    {
+      uartPrintf(_DEF_UART2, "Received : %c\r\n", uartRead(_DEF_UART2));
+    }
+
   }
 
   return 0;
