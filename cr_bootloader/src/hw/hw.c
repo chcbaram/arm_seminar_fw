@@ -14,12 +14,22 @@
 
 void hwInit(void)
 {
+  cmdifInit();
+  swtimerInit();
+  hwtimerInit();
   usbInit();
-
   ledInit();
   microsInit();
   vcpInit();
   uartInit();
+  buttonInit();
+  buzzerInit();
+
+  // 1ms for swtimer
+  //
+  hwtimerSetPeriod(_HW_DEF_SWTIMER_CH, 1000);
+  hwtimerAttachInterrupt(_HW_DEF_SWTIMER_CH, swtimerISR);
+  hwtimerStart(_HW_DEF_SWTIMER_CH);
 }
 
 

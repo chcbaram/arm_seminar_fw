@@ -17,6 +17,7 @@
 #include "def.h"
 #include "bsp.h"
 
+#include "cmdif.h"
 
 #include "core/usb.h"
 #include "core/vcp.h"
@@ -26,6 +27,10 @@
 #include "core/delay.h"
 #include "core/led.h"
 #include "core/uart.h"
+#include "core/hwtimer.h"
+#include "core/swtimer.h"
+#include "core/button.h"
+#include "core/buzzer.h"
 
 
 void hwInit(void);

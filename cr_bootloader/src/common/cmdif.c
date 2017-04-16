@@ -38,6 +38,7 @@ uint8_t cmdifReadByte(char *p_data);
 int parseCommandArgs(char *cmdline, char **argv);
 void upperStr( char *Str );
 
+int cmdifCmdExit(int argc, char **argv);
 int cmdifCmdShowList(int argc, char **argv);
 int cmdifCmdMemoryDump(int argc, char **argv);
 int cmdifCmdMemoryWrite32(int argc, char **argv);
@@ -79,6 +80,8 @@ bool cmdifInit(void)
 
 
   cmdifAdd("help", cmdifCmdShowList);
+  cmdifAdd("exit", cmdifCmdExit);
+
   cmdifAdd("md",   cmdifCmdMemoryDump);
   cmdifAdd("mw32", cmdifCmdMemoryWrite32);
 
@@ -97,6 +100,21 @@ void cmdifBegin(uint8_t ch, uint32_t baud)
   cmdif_cmd.baud = baud;
 
   uartOpen(ch, baud);
+}
+
+void cmdifLoop(void)
+{
+  cmdif_cmd.exit = false;
+
+  while(1)
+  {
+    cmdifMain();
+
+    if (cmdif_cmd.exit == true)
+    {
+      break;
+    }
+  }
 }
 
 void cmdifMain(void)
@@ -167,18 +185,26 @@ void cmdifAdd(char *cmd_str, int (*p_func)(int argc, char **argv))
   cmdif_cmd.index++;
 }
 
+int cmdifCmdExit(int argc, char **argv)
+{
+  cmdif_cmd.exit = true;
+
+  cmdifPrint("exit...\n");
+  return 0;
+}
+
 int cmdifCmdShowList(int argc, char **argv)
 {
   int cmdlp = 0;
 
-  cmdifPrint("\n======== Command List ========\n");
+  cmdifPrint("\n---------- cmd list ---------\n");
   while( cmdif_cmd.node[cmdlp].cmd_str[0] )
   {
     cmdifPrint(cmdif_cmd.node[cmdlp].cmd_str);
     cmdifPrint("\n");
     cmdlp++;
   }
-  cmdifPrint("\n==============================\n");
+  cmdifPrint("\n-----------------------------\n");
   return 0;
 }
 

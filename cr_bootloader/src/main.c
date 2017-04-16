@@ -12,17 +12,31 @@ void mainInit(void);
 
 
 
+void led_isr(void *arg)
+{
+  ledToggle(0);
+}
+
+
+
 int main(void)
 {
 
-#if 0
+
+#if 1
 
   mainInit();
 
 
 
-  apMain();
 
+
+  //apMain();
+
+  while(1)
+  {
+    cmdifMain();
+  }
 
 
 #else
@@ -52,7 +66,7 @@ int main(void)
       t_time    = millis();
       t_time_us = micros();
 
-      ledToggle(cnt%4);
+      //ledToggle(cnt%4);
 
       uartPrintf(_DEF_UART1, "uart1 %d\r\n", cnt);
       uartPrintf(_DEF_UART2, "uart2 %d\r\n", cnt);
@@ -76,7 +90,38 @@ int main(void)
 
 void mainInit(void)
 {
+  swtimer_handle_t led_timer_h;
+  uint32_t time_pressed;
+  uint32_t button_cnt = 0;
+  uint8_t  button_num = 1;
+
   bspInit();
   hwInit();
   apInit();
+
+  led_timer_h = swtimerGetHandle();
+  swtimerSet(led_timer_h, 500, LOOP_TIME, led_isr, NULL);
+  swtimerStart(led_timer_h);
+
+  cmdifBegin(_DEF_UART1, 115200);
+
+
+  time_pressed = buttonGetPressedTime(button_num);
+
+  while(buttonGetPressed(button_num))
+  {
+    if (button_cnt == 3)
+    {
+      cmdifPrint("cmdif begin \r\n");
+      cmdifLoop();
+      break;
+    }
+
+    if (buttonGetPressedTime(button_num)-time_pressed >= 1000)
+    {
+      time_pressed = buttonGetPressedTime(button_num);
+      buzzerStart(1000, 100);
+      button_cnt++;
+    }
+  }
 }

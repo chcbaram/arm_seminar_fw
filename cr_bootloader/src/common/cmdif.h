@@ -9,10 +9,15 @@
 #define CMDIF_H_
 
 
+#include <stdlib.h>
+
+
 
 #ifdef __cplusplus
  extern "C" {
 #endif
+
+
 
 
 
@@ -38,6 +43,7 @@ typedef struct
   uint8_t            ch;
   uint32_t           baud;
   uint16_t           index;
+  bool               exit;
 
   cmdif_cmd_node_t  *node;
 
@@ -56,6 +62,7 @@ typedef struct
  void cmdifBegin(uint8_t ch, uint32_t baud);
  void cmdifAdd(char *cmd_str, int (*p_func)(int argc, char **argv));
  void cmdifMain(void);
+ void cmdifLoop(void);
 
  void cmdifPrintf(const char *fmt, ...);
  void cmdifPrint(char *str);
