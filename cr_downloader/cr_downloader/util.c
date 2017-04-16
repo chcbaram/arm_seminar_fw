@@ -28,3 +28,18 @@ uint32_t millis(void)
 
   return (uint32_t)ret;
 }
+
+
+void delay(uint32_t delay_ms)
+{
+  uint32_t time_pre;
+
+  time_pre = millis();
+  while(1)
+  {
+    if (millis()-time_pre >= delay_ms)
+    {
+      break;
+    }
+  }
+}

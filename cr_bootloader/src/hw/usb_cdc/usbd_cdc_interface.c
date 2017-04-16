@@ -293,6 +293,7 @@ static int8_t CDC_Itf_Receive(uint8_t* Buf, uint32_t *Len)
     }
   }
 
+#if 0
   if( CDC_Reset_Status == 1 )
   {
     CDC_Reset_Status = 0;
@@ -317,6 +318,7 @@ static int8_t CDC_Itf_Receive(uint8_t* Buf, uint32_t *Len)
     wdgSetup(10);
     wdgStart();
   }
+#endif
 
   USBD_CDC_ReceivePacket(&USBD_Device);
   return (USBD_OK);

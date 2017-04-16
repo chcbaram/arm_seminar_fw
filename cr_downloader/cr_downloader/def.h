@@ -2,7 +2,12 @@
 #define DEF_H
 
 
+#include <stdio.h>
+#include <stdarg.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdint.h>
+
 
 
 
@@ -16,11 +21,25 @@ typedef struct
 
 
 
+typedef uint8_t err_code_t;
+
+
+
 #define OK              0
 
 #define _DEF_UART1      0
 #define _DEF_UART2      1
 #define _DEF_UART3      2
+
+
+
+
+
+
+#define ERRCODE_TIMEOUT             255
+
+
+
 
 
 

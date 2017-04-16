@@ -28,6 +28,20 @@
 
 
 
+
+#define FLASH_FW_SIZE                     ((768-32)*1024)   // 736KB
+#define FLASH_FW_ADDR_START               0x08040000
+#define FLASH_FW_ADDR_END                 (FLASH_FW_ADDR_START + FLASH_FW_SIZE)
+
+
+#define FLASH_TAG_SIZE                    (32*1024)         // 32KB
+#define FLASH_TAG_ADDR_START              FLASH_FW_ADDR_END
+#define FLASH_TAG_ADDR_END                (FLASH_TAG_ADDR_START + FLASH_TAG_SIZE)
+
+
+
+
+
 #ifdef __cplusplus
 }
 #endif

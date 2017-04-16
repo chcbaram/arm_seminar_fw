@@ -5,9 +5,15 @@ CONFIG -= qt
 
 SOURCES += main.c \
     uart.c \
-    util.c
+    util.c \
+    cmd.c \
+    boot.c \
+    download.c
 
 HEADERS += \
     def.h \
     uart.h \
-    util.h
+    util.h \
+    cmd.h \
+    boot.h \
+    download.h

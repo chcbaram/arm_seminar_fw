@@ -25,6 +25,7 @@
 
 
 uint32_t millis(void);
+void delay(uint32_t delay_ms);
 
 
 #ifdef __cplusplus

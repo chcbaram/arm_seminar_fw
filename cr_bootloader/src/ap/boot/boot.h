@@ -28,6 +28,8 @@
 
 void bootInit(void);
 void bootProcessCmd(cmd_t *p_cmd);
+void bootJumpToFw(void);
+err_code_t bootCheckFw(void);
 
 
 #ifdef __cplusplus
