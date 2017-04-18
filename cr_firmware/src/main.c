@@ -18,6 +18,7 @@ int main(void)
 {
   uint32_t t_time;
   uint32_t t_time_us;
+  uint32_t t_time_debug;
   uint32_t cnt = 0.;
   uint32_t i;
 
@@ -49,6 +50,16 @@ int main(void)
         }
       }
     }
+
+    if (buttonGetPressed(0) == true)
+    {
+      if (buttonGetPressedTime(0) > 3000)
+      {
+        buzzerStart(1000, 100);
+        delay(200);
+        cmdifLoop();
+      }
+    }
   }
 
   return 0;
@@ -59,4 +70,6 @@ void mainInit(void)
   bspInit();
   hwInit();
   apInit();
+
+  cmdifBegin(_DEF_UART1, 115200);
 }
