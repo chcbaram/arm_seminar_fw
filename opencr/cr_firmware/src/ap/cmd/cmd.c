@@ -62,55 +62,55 @@ void cmdPutch(uint8_t ch, uint8_t data)
 
 bool cmdReceivePacket(cmd_t *p_cmd)
 {
-	bool     ret = false;
-	uint8_t  ch;
-	uint32_t index;
+  bool     ret = false;
+  uint8_t  ch;
+  uint32_t index;
 
 
-	//-- 명령어 수신
-	//
-	if( uartAvailable(p_cmd->ch) )
-	{
-		ch = uartRead(p_cmd->ch);
-	}
-	else
-	{
-		return false;
-	}
+  //-- 명령어 수신
+  //
+  if( uartAvailable(p_cmd->ch) )
+  {
+    ch = uartRead(p_cmd->ch);
+  }
+  else
+  {
+    return false;
+  }
 
 
-	//-- 바이트간 타임아웃 설정(100ms)
-	//
-	if((millis()-p_cmd->save_time[0]) > 500)
-	{
-		p_cmd->state        = CMD_STATE_WAIT_STX;
-		p_cmd->save_time[0] = millis();
-	}
+  //-- 바이트간 타임아웃 설정(100ms)
+  //
+  if((millis()-p_cmd->save_time[0]) > 500)
+  {
+    p_cmd->state        = CMD_STATE_WAIT_STX;
+    p_cmd->save_time[0] = millis();
+  }
 
-	//-- 명령어 상태
-	//
-	switch(p_cmd->state)
-	{
-		//-- STX 문자 기다리는 상태
-		//
-		case CMD_STATE_WAIT_STX:
+  //-- 명령어 상태
+  //
+  switch(p_cmd->state)
+  {
+    //-- STX 문자 기다리는 상태
+    //
+    case CMD_STATE_WAIT_STX:
 
-			// 시작 문자를 기다림
-			if( ch == CMD_STX )
-			{
-				p_cmd->state               = CMD_STATE_WAIT_CMD;
-				p_cmd->rx_packet.check_sum = 0x00;
-				p_cmd->rx_packet.length    = 0;
-			}
-			break;
+      // 시작 문자를 기다림
+      if( ch == CMD_STX )
+      {
+        p_cmd->state               = CMD_STATE_WAIT_CMD;
+        p_cmd->rx_packet.check_sum = 0x00;
+        p_cmd->rx_packet.length    = 0;
+      }
+      break;
 
-		//-- 명령어 기다리는 상태
-		//
-		case CMD_STATE_WAIT_CMD:
-		  p_cmd->rx_packet.cmd        = ch;
-		  p_cmd->rx_packet.check_sum ^= ch;
-			p_cmd->state                = CMD_STATE_WAIT_OPTION_ERROR;
-			break;
+    //-- 명령어 기다리는 상태
+    //
+    case CMD_STATE_WAIT_CMD:
+      p_cmd->rx_packet.cmd        = ch;
+      p_cmd->rx_packet.check_sum ^= ch;
+      p_cmd->state                = CMD_STATE_WAIT_OPTION_ERROR;
+      break;
 
     case CMD_STATE_WAIT_OPTION_ERROR:
       p_cmd->rx_packet.option     = ch;
@@ -119,9 +119,9 @@ bool cmdReceivePacket(cmd_t *p_cmd)
       p_cmd->state                = CMD_STATE_WAIT_LENGTH_L;
       break;
 
-		//-- 데이터 사이즈 기다리는 상태
-		//
-		case CMD_STATE_WAIT_LENGTH_L:
+    //-- 데이터 사이즈 기다리는 상태
+    //
+    case CMD_STATE_WAIT_LENGTH_L:
       p_cmd->rx_packet.length     = ch;
       p_cmd->rx_packet.check_sum ^= ch;
       p_cmd->state                = CMD_STATE_WAIT_LENGTH_H;
@@ -132,77 +132,77 @@ bool cmdReceivePacket(cmd_t *p_cmd)
       p_cmd->rx_packet.check_sum ^= ch;
       p_cmd->state                = CMD_STATE_WAIT_LENGTH_H;
 
-			if (p_cmd->rx_packet.length <= CMD_MAX_DATA_LENGTH)
-			{
-				if (p_cmd->rx_packet.length > 0)
-				{
-				  p_cmd->rx_packet.index = 0;
-				  p_cmd->state = CMD_STATE_WAIT_DATA;
-				}
-				else
-				{
-				  p_cmd->state = CMD_STATE_WAIT_CHECKSUM;
-				}
-			}
-			else
-			{
-			  p_cmd->state = CMD_STATE_WAIT_STX;
-			}
-			break;
+      if (p_cmd->rx_packet.length <= CMD_MAX_DATA_LENGTH)
+      {
+        if (p_cmd->rx_packet.length > 0)
+        {
+          p_cmd->rx_packet.index = 0;
+          p_cmd->state = CMD_STATE_WAIT_DATA;
+        }
+        else
+        {
+          p_cmd->state = CMD_STATE_WAIT_CHECKSUM;
+        }
+      }
+      else
+      {
+        p_cmd->state = CMD_STATE_WAIT_STX;
+      }
+      break;
 
-		//-- 데이터를 기다리는 상태
-		//
-		case CMD_STATE_WAIT_DATA:
+    //-- 데이터를 기다리는 상태
+    //
+    case CMD_STATE_WAIT_DATA:
 
-		  index = p_cmd->rx_packet.index;
+      index = p_cmd->rx_packet.index;
 
-		  p_cmd->rx_packet.check_sum ^= ch;
-		  index = p_cmd->rx_packet.index;
-		  p_cmd->rx_packet.data[index] = ch;
+      p_cmd->rx_packet.check_sum ^= ch;
+      index = p_cmd->rx_packet.index;
+      p_cmd->rx_packet.data[index] = ch;
 
-		  p_cmd->rx_packet.index++;
+      p_cmd->rx_packet.index++;
 
-			if (p_cmd->rx_packet.index >= p_cmd->rx_packet.length)
-			{
-			  p_cmd->state = CMD_STATE_WAIT_CHECKSUM;
-			}
-			break;
+      if (p_cmd->rx_packet.index >= p_cmd->rx_packet.length)
+      {
+        p_cmd->state = CMD_STATE_WAIT_CHECKSUM;
+      }
+      break;
 
-		//-- 체크섬을 기다리는 상태
-		//
-		case CMD_STATE_WAIT_CHECKSUM:
+    //-- 체크섬을 기다리는 상태
+    //
+    case CMD_STATE_WAIT_CHECKSUM:
 
 
-		  p_cmd->rx_packet.check_sum_recv = ch;
-		  p_cmd->state                    = CMD_STATE_WAIT_ETX;
-			break;
+      p_cmd->rx_packet.check_sum_recv = ch;
+      p_cmd->state                    = CMD_STATE_WAIT_ETX;
+      break;
 
-		//-- ETX 기다리는 상태
-		//
-		case CMD_STATE_WAIT_ETX:
+    //-- ETX 기다리는 상태
+    //
+    case CMD_STATE_WAIT_ETX:
 
-			if (ch == CMD_ETX)
-			{
-				if (p_cmd->rx_packet.check_sum_recv == p_cmd->rx_packet.check_sum)
-				{
-					ret = true;
-				}
-			}
-			p_cmd->state = CMD_STATE_WAIT_STX;
-			break;
-	}
+      if (ch == CMD_ETX)
+      {
+        if (p_cmd->rx_packet.check_sum_recv == p_cmd->rx_packet.check_sum)
+        {
+          ret = true;
+        }
+      }
+      p_cmd->state = CMD_STATE_WAIT_STX;
+      break;
+  }
 
-	return ret;
+  return ret;
 }
 
 void cmdSendResp(cmd_t *p_cmd, uint8_t err_code, uint8_t *p_data, uint32_t length)
 {
-	uint32_t i;
-	uint8_t  ch;
-	uint8_t  check_sum = 0;
-	uint8_t  data;
+  uint32_t i;
+  uint8_t  ch;
+  uint8_t  check_sum = 0;
+  uint8_t  data;
 
-	ch = p_cmd->ch;
+  ch = p_cmd->ch;
 
 
 
@@ -220,27 +220,27 @@ void cmdSendResp(cmd_t *p_cmd, uint8_t err_code, uint8_t *p_data, uint32_t lengt
   p_cmd->tx_packet.length = length;
 
 
-	cmdPutch(ch, CMD_STX);
-	cmdPutch(ch, p_cmd->tx_packet.cmd);
-	check_sum ^= p_cmd->tx_packet.cmd;
+  cmdPutch(ch, CMD_STX);
+  cmdPutch(ch, p_cmd->tx_packet.cmd);
+  check_sum ^= p_cmd->tx_packet.cmd;
 
-	cmdPutch(ch, p_cmd->tx_packet.error);
+  cmdPutch(ch, p_cmd->tx_packet.error);
   check_sum ^= p_cmd->tx_packet.error;
 
-	data = p_cmd->tx_packet.length & 0xFF;
-	cmdPutch(ch, data); check_sum ^= data;
+  data = p_cmd->tx_packet.length & 0xFF;
+  cmdPutch(ch, data); check_sum ^= data;
   data = (p_cmd->tx_packet.length>>8) & 0xFF;
   cmdPutch(ch, data); check_sum ^= data;
 
 
-	for( i=0; i<p_cmd->tx_packet.length && i<CMD_MAX_DATA_LENGTH; i++ )
-	{
-	  cmdPutch(ch, p_cmd->tx_packet.data[i]);
-		check_sum ^= p_cmd->tx_packet.data[i];
-	}
+  for( i=0; i<p_cmd->tx_packet.length && i<CMD_MAX_DATA_LENGTH; i++ )
+  {
+    cmdPutch(ch, p_cmd->tx_packet.data[i]);
+    check_sum ^= p_cmd->tx_packet.data[i];
+  }
 
-	cmdPutch(ch, check_sum);
-	cmdPutch(ch, CMD_ETX);
+  cmdPutch(ch, check_sum);
+  cmdPutch(ch, CMD_ETX);
 }
 
 

@@ -28,13 +28,13 @@
 typedef struct
 {
   uint32_t index;
-	uint8_t	 cmd;
-	uint8_t  option;
-	uint8_t  error;
-	uint16_t length;
-	uint8_t  check_sum;
-	uint8_t  check_sum_recv;
-	uint8_t	 data[CMD_MAX_DATA_LENGTH];
+  uint8_t	 cmd;
+  uint8_t  option;
+  uint8_t  error;
+  uint16_t length;
+  uint8_t  check_sum;
+  uint8_t  check_sum_recv;
+  uint8_t	 data[CMD_MAX_DATA_LENGTH];
 } cmd_packet_t;
 
 
@@ -46,8 +46,8 @@ typedef struct
   uint32_t baud;
   uint32_t save_time[2];
 
-	cmd_packet_t tx_packet;
-	cmd_packet_t rx_packet;
+  cmd_packet_t tx_packet;
+  cmd_packet_t rx_packet;
 } cmd_t;
 
 
