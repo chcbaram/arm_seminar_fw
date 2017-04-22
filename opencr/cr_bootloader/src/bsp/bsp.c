@@ -31,6 +31,7 @@ void bspInit()
   SCB_EnableDCache();
   SCB_EnableICache();
 
+  HAL_Delay(200);
 
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
