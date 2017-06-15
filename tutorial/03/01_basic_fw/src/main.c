@@ -4,6 +4,10 @@
  *  Created on: 2017. 3. 19.
  *      Author: baram
  */
+/*
+ for OpenOCD
+ -f opencr_openocd.cfg
+ */
 #include "main.h"
 
 
