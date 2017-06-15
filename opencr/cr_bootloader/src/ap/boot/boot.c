@@ -35,6 +35,7 @@ typedef struct
   uint32_t firmware_check_sum;
 } firmware_tag_t;
 
+typedef  void (*p_func_t)(void);
 
 
 static void bootCmdReadVersion(cmd_t *p_cmd);
@@ -62,13 +63,18 @@ void bootInit(void)
 
 void bootJumpToFw(void)
 {
+  p_func_t jump_func = (p_func_t)(*(uint32_t *)(FLASH_FW_ADDR_START+ 4));
+
   bspDeinit();
 
   SCB->VTOR = FLASH_FW_ADDR_START;
 
+  /*
   __asm volatile("ldr r0, =0x08040000 \n"
                  "ldr sp, [r0]        \n"
                  "ldr pc, [r0, #4]    \n");
+  */
+  jump_func();
 }
 
 err_code_t bootCheckFw(void)
