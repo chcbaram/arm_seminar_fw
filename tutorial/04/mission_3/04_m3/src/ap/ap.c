@@ -13,7 +13,19 @@
 
 
 /*
-  buttonGetPressed(0);
+  uint32_t pre_time;
+
+  if (millis()-pre_time >= 100 )
+  {
+     pre_time = millis();
+
+     // 100ms 마다 실행
+  }
+
+  if (buttonGetPressed(0) == true)
+  {
+         //버튼 눌렸을 때
+  }
 */
 
 
